@@ -1,0 +1,83 @@
+<%- include('header', { title: 'Students', active: 'students' }) %>
+
+<div class="page-head">
+    <div>
+        <h1>Students</h1>
+        <p class="page-sub"><%= stats.total %> student<%= stats.total === 1 ? '' : 's' %> in the directory</p>
+    </div>
+    <a href="/students/add" class="btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Add Student
+    </a>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <span class="stat-label">Total students</span>
+        <span class="stat-value"><%= stats.total %></span>
+    </div>
+</div>
+
+<% if (students.length > 0) { %>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Phone</th>
+                <th class="right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% students.forEach(student => { %>
+            <tr>
+                <td>
+                    <div class="person">
+                        <span class="avatar"><%= student.name.charAt(0).toUpperCase() %></span>
+                        <span class="name-text"><%= student.name %></span>
+                    </div>
+                </td>
+                <td><%= student.email %></td>
+                <td>
+                    <% if (student.course) { %>
+                    <span class="pill"><%= student.course %></span>
+                    <% } else { %>
+                    <span class="dash">—</span>
+                    <% } %>
+                </td>
+                <td><%= student.phone ? student.phone : '—' %></td>
+                <td class="right">
+                    <div class="row-actions">
+                        <a href="/students/edit/<%= student._id %>" class="btn btn-sm btn-light">Edit</a>
+                        <form action="/students/delete/<%= student._id %>" method="POST" onsubmit="return confirm('Delete <%= student.name %>?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<% } else { %>
+<div class="empty">
+    <span class="empty-mark">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+    </span>
+    <h3>No students yet</h3>
+    <p>Add your first student to start building the directory.</p>
+    <a href="/students/add" class="btn">Add your first student</a>
+</div>
+<% } %>
+
+<%- include('footer') %>
